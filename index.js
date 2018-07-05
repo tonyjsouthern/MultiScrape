@@ -2,7 +2,9 @@ var https = require("https");
 const axios = require("axios");
 var path = require('path');
 const fs = require('fs');
-var sql = require('mssql');
+var ISOLATION_LEVEL = require('tedious').ISOLATION_LEVEL;
+var Connection = require('tedious').Connection;
+var sql = require('sequelize');
 require('dotenv').config()
 
 // variable to store customer domains
@@ -10,31 +12,32 @@ var domains;
 
 // config for database
 var config = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    server: process.env.DB_SERVER,
-    database: process.env.DB_DB
+  host: process.env.DB_SERVER,
+  port: "1433",
+  dialect: "mssql",
+  userName: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DB
 };
 
 // connect to the database
-sql.connect(config, function (err){
-  // if err throw it
-  if (err) console.log(err);
-  //create request object
-  var request = new sql.Request();
+var connection = new sql(config.database,config.userName,config.password,config);
 
-  // query the database
-  request.query('select domainname from customer where processactive = 1', function (err, recordset){
-    // if err throw it
-    if (err) console.log(err)
-    // if no error send the records
-    domains = recordset.recordset;
-    console.log(domains);
-  })
-
-  request.close();
+// query the database
+connection.query(`SELECT domainname FROM customer WHERE processactive = 1 `).then(function (domain){
+    domains = domain;
+    console.log(domain);
+    connection.close();
+}).catch(function (err) {
+    console.log(err);
 })
 
 
+/*
+select * from customer where processactive = 1
+select * from customerdomains
 
-console.log("Script has finished Running");
+select c.DomainName, cd.DomainName from customer c
+full outer join customerdomains cd on c.Customer_id = cd.Customer_id
+where c.processactive = 1 and
+*/
