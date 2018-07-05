@@ -5,9 +5,6 @@ const fs = require('fs');
 var sql = require('mssql');
 require('dotenv').config()
 
-var dotenv = require('dotenv');
-dotenv.load();
-
 // variable to store customer domains
 var domains;
 
@@ -27,13 +24,15 @@ sql.connect(config, function (err){
   var request = new sql.Request();
 
   // query the database
-  request.query('select domainname from customer', function (err, recordset){
+  request.query('select domainname from customer where processactive = 1', function (err, recordset){
     // if err throw it
     if (err) console.log(err)
     // if no error send the records
-    console.log(recordset);
+    domains = recordset.recordset;
+    console.log(domains);
   })
 
+  request.close();
 })
 
 
