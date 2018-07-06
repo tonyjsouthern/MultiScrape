@@ -5,10 +5,11 @@ const fs = require('fs');
 var ISOLATION_LEVEL = require('tedious').ISOLATION_LEVEL;
 var Connection = require('tedious').Connection;
 var sql = require('sequelize');
+var queries = require('./sql.js')
 require('dotenv').config()
 
 // variable to store customer domains
-var domains;
+var domains =[];
 
 // config for database
 var config = {
@@ -23,14 +24,27 @@ var config = {
 // connect to the database
 var connection = new sql(config.database,config.userName,config.password,config);
 
-// query the database
-connection.query(`SELECT domainname FROM customer WHERE processactive = 1 `).then(function (domain){
-    domains = domain;
-    console.log(domain);
-    connection.close();
-}).catch(function (err) {
+// intitialization function
+async function init () {
+  await queryDbs(queries.one)
+  await queryDbs(queries.two)
+}
+
+// calls the init function
+init()
+
+// querys the DB and pushes the results to the global domains varbale
+function queryDbs (query) {
+  connection.query(query).spread(function (results){
+      for (var i = 0; i < results.length; i++) {
+        domains.push(results.domainname)
+      }
+      console.log(domains.length)
+      connection.close();
+  }).catch(function (err) {
     console.log(err);
-})
+  })
+}
 
 
 /*
