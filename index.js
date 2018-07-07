@@ -1,22 +1,22 @@
 var https = require("https");
 const axios = require("axios");
-var path = require('path');
-const fs = require('fs');
-var ISOLATION_LEVEL = require('tedious').ISOLATION_LEVEL;
-var Connection = require('tedious').Connection;
-var sql = require('sequelize');
-var queries = require('./sql.js')
-require('dotenv').config()
+var path = require("path");
+const fs = require("fs");
+var ISOLATION_LEVEL = require("tedious").ISOLATION_LEVEL;
+var Connection = require("tedious").Connection;
+var sql = require("sequelize");
+var queries = require("./sql.js");
+require("dotenv").config();
 
 // GLOBAL VARIABLES
 // variable to store customer domains
 var domains = [];
 // varable used to store the html after axios call
-var storedHTML
+var storedHTML;
 // varable that stores the current site the iteration is on
-var currentSite
+var currentSite;
 // counter for recursive function
-var i = 591
+var i = 0;
 
 
 // config for database
@@ -51,7 +51,7 @@ function init() {
     var dataSetTwo = queryDbs(queries.two)
     resolve(dataSetOne, dataSetTwo);
   }).then(function() {
-    console.log("Number of domains to scan: " + domains.length + "\n")
+    console.log("\n" + "Number of domains to scan: " + domains.length + "\n")
     // intitializes the recursive loop function
     loopSites()
   })
@@ -62,16 +62,15 @@ function loopSites() {
     // set the global variable to the current website being checked
     currentSite = "http://" + domains[i];
     // log the current site and number in the domains array
-    console.log(i + " : " + currentSite)
+    console.log(i + " of " + domains.length + " : " + currentSite);
     // run loadsite function
     var temp = loadSite(currentSite);
-    // resolve it
     resolve(temp);
   }).then(function() {
     // add a new function that contains all checks and takes a data parameter
-    checkSF(storedHTML, currentSite)
+    runChecks(storedHTML, currentSite)
     if (i == domains.length) {
-      console.log("finished")
+      console.log("Process Completed.");
     } else {
       i++
       loopSites();
@@ -80,32 +79,85 @@ function loopSites() {
     console.log(err);
     i++
     loopSites();
-})
+  })
+}
+
+function runChecks(data, site) {
+  checkSF(data, site);
+  checkHubspot(data, site);
+  checkMarketo(data, site);
+  checkActon(data, site);
+  checkClickDimensions(data, site);
+  checkPardot(data, site);
 }
 
 function loadSite() {
   return axios.get(currentSite)
     .then(response => {
-      storedHTML = response.data
+      storedHTML = response.data;
     })
     .catch(error => {
-      fs.appendFile('sites/Error-Log.txt', currentSite + " : Error Code - " +  error.code + "\n", (err) => {
+      fs.appendFile("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {
         console.log("An error has occurred loading this website. Check the error.txt file for more information.");
       });
     });
 }
 
-// intitializes program
+// Intitializes Program
 init()
-
 
 // Tracking Script Checks
 
 function checkSF(data, site) {
-  if (data.indexOf('sf_config') != -1 || data.indexOf('frt(') != -1) {
-    fs.appendFile('sites/SF.txt', site + "\n", (err) => {
+  if (data.indexOf("sf_config") != -1 || data.indexOf("frt(") != -1) {
+    fs.appendFile("sites/SF.txt", site + "\n", (err) => {
       if (err) throw err;
-      console.log(site + " : Saved - SF");
+      console.log("Saved - SF");
+    });
+  }
+}
+
+function checkHubspot(data, site) {
+  if (data.indexOf("hs-scripts.com") != -1) {
+    fs.appendFile("sites/hubspot.txt", site + "\n", (err) => {
+      if (err) throw err;
+      console.log("Saved - Hubspot");
+    });
+  }
+}
+
+function checkMarketo(data, site) {
+  if (data.indexOf("munchkin") != -1) {
+    fs.appendFile("sites/Marketo.txt", site + "\n", (err) => {
+      if (err) throw err;
+      console.log("Saved - Marketo");
+    });
+  }
+}
+
+function checkActon(data, site) {
+  if (data.indexOf("acton") != -1) {
+    fs.appendFile("sites/Act-On.txt", site + "\n", (err) => {
+      if (err) throw err;
+      console.log("Saved - Act-On");
+    });
+  }
+}
+
+function checkClickDimensions(data, site) {
+  if (data.indexOf("clickdimensions") != -1) {
+    fs.appendFile("sites/Click-Dimensions.txt", site + "\n", (err) => {
+      if (err) throw err;
+      console.log("Saved - Click Dimensions");
+    });
+  }
+}
+
+function checkPardot(data, site) {
+  if (data.indexOf("pardot") != -1) {
+    fs.appendFile("sites/Pardot.txt", site + "\n", (err) => {
+      if (err) throw err;
+      console.log("Saved - Pardot");
     });
   }
 }
