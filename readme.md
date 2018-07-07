@@ -6,12 +6,13 @@ This application runs a query against a database and grabs URL's. It then loads 
 
 1) You must have Node.JS installed on your computer. To download Node.Js you can visit the offiicial site here: [www.nodejs.org](https://nodejs.org/en/download/ )
 2) Clone the repository and run `npm install`
-3) Navigate to the directory and `npm start` to start the application
+3) `npm start` to start the application
 
 ### Running the application on windows:
 1) You must have Node.JS installed on your computer. To download Node.Js you can visit the offiicial site here: [www.nodejs.org](https://nodejs.org/en/download/ )
-2) Click the install bat file and wait for the command prompt to exit
-3) Click "Run" bat file and the program will execute
+2) Download the zip above and unzip to a folder
+3) Click the install bat file and wait for the command prompt to exit
+4) Click "Run" bat file and the program will execute
 
 ## Configuration
 
