@@ -53,3 +53,9 @@ function checkPardot(data, site) {
 ```
 
 To change the criteria that is return simply change the text in the indexOf function, the name of the file that is being written to by `fs.appendFile` and the `console.log` text.
+
+
+
+
+## Output
+In the root folder of the application there is a folder titled "sites". Each check will create a corresponding text file in that folder and insert the names of the positive results into the file.
