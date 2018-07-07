@@ -9,7 +9,7 @@ var queries = require('./sql.js')
 require('dotenv').config()
 
 // variable to store customer domains
-var domains =[];
+var domains = [];
 
 // config for database
 var config = {
@@ -22,36 +22,28 @@ var config = {
 };
 
 // connect to the database
-var connection = new sql(config.database,config.userName,config.password,config);
+var connection = new sql(config.database, config.userName, config.password, config);
 
 // intitialization function
-async function init () {
-  await queryDbs(queries.one)
-  await queryDbs(queries.two)
+function init() {
+  new Promise(function(resolve, reject) {
+    var dataSetOne = queryDbs(queries.one)
+    var dataSetTwo = queryDbs(queries.two)
+    resolve(dataSetOne, dataSetTwo);
+  }).then(function() {
+    console.log(domains)
+ })
 }
 
 // calls the init function
 init()
 
 // querys the DB and pushes the results to the global domains varbale
-function queryDbs (query) {
-  connection.query(query).spread(function (results){
-      for (var i = 0; i < results.length; i++) {
-        domains.push(results.domainname)
-      }
-      console.log(domains.length)
-      connection.close();
-  }).catch(function (err) {
-    console.log(err);
+function queryDbs(query) {
+  return connection.query(query).spread(function(results) {
+        for (var i = 0; i < results.length; i++) {
+          domains.push(results[i].domainname)
+    }
+    connection.close();
   })
 }
-
-
-/*
-select * from customer where processactive = 1
-select * from customerdomains
-
-select c.DomainName, cd.DomainName from customer c
-full outer join customerdomains cd on c.Customer_id = cd.Customer_id
-where c.processactive = 1 and
-*/
