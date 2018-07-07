@@ -1,4 +1,4 @@
 module.exports = {
-    one: "select  distinct domainname from customer where processactive = 1",
-    two: "select SUBSTRING(domainname, 8, 60) as domainname from customerdomains where customer_id in (select customer_id from customer where processactive = 1)   and SUBSTRING(domainname, 8, 60)  not in (select distinct domainname from customer) "
+    one: "SELECT DISTINCT domainname FROM customer WHERE  processactive = 1 ",
+    two: "SELECT Substring(domainname, 8, 60) AS domainname FROM   customerdomains WHERE  customer_id IN (SELECT customer_id FROM customer WHERE  processactive = 1) AND Substring(domainname, 8, 60) NOT IN (SELECT DISTINCT domainname FROM   customer)"
 }

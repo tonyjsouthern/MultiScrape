@@ -67,9 +67,8 @@ function loopSites() {
     var temp = loadSite(currentSite);
     resolve(temp);
   }).then(function() {
-    // add a new function that contains all checks and takes a data parameter
     runChecks(storedHTML, currentSite)
-    if (i == domains.length) {
+    if (i === domains.length) {
       console.log("Process Completed.");
     } else {
       i++
