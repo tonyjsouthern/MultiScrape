@@ -1,4 +1,23 @@
+// Import FS
 const fs = require("fs");
+
+/*
+SCRIPT CHECK BREAKDOWN:
+
+// Declare function that takes HTML and a website URL
+function(data, site) {
+  // Check the HTML for a given peice of text
+  if (data.indexOf("hs-scripts.com") != -1) {
+    // If given text is present write the data to a text file in the sites folder
+    fs.appendFile("sites/hubspot.txt", site + "\n", (err) => {
+      // catch error
+      if (err) throw err;
+        // console log success message
+        console.log("Saved - Hubspot");
+    });
+  }
+}
+*/
 
 var scriptChecks = {
 

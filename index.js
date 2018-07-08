@@ -1,9 +1,9 @@
 var https = require("https");
+const fs = require("fs");
 const axios = require("axios");
 var path = require("path");
-var ISOLATION_LEVEL = require("tedious").ISOLATION_LEVEL;
-var Connection = require("tedious").Connection;
 var sql = require("sequelize");
+var Connection = require("tedious").Connection;
 var queries = require("./sql.js");
 var scriptChecks = require("./script-checks.js")
 require("dotenv").config();
@@ -66,10 +66,14 @@ function loopSites() {
     var temp = loadSite(currentSite);
     resolve(temp);
   }).then(function() {
+    // after website has been loaded run all of the script checks
     runChecks(storedHTML, currentSite)
+    // check to see if the loop is at the end of the array
     if (i === domains.length) {
+      // if it is console log success messsage
       console.log("Process Completed.");
     } else {
+      // if it isnt, increment I and run the function again
       i++
       loopSites();
     }
@@ -89,14 +93,18 @@ function runChecks(data, site) {
   scriptChecks.checkPardot(data, site);
 }
 
+// Function to load the website and store the HTML in a global variable
 function loadSite() {
+  // load the website
   return axios.get(currentSite)
     .then(response => {
+      // When site is finished loading set the HTML to global variable
       storedHTML = response.data;
     })
     .catch(error => {
+      // If there is an error message write the website url and error code to logs
       fs.appendFile("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {
-        console.log("An error has occurred loading this website. Check the error.txt file for more information.");
+        console.log("An error has occurred loading " + currentSite + ". Check the error.txt file for more information.");
       });
     });
 }
