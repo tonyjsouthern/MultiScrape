@@ -11,7 +11,7 @@ This application runs a query against a database and grabs URL's. It then loads 
 ### Running the application on windows:
 1) You must have Node.JS installed on your computer. To download Node.Js you can visit the offiicial site here: [www.nodejs.org](https://nodejs.org/en/download/ )
 2) Download the zip above and unzip to a folder
-3) Click the install bat file and wait for the command prompt to exit
+3) Click the install bat file and wait for the command prompt to exit (This file only needs to be ran once and never again after the intial run)
 4) Click "Run" bat file and the program will execute
 
 ## Configuration
@@ -30,7 +30,7 @@ var config = {
 ```
 
 #### SQL Commands:
-In the root folder there is sql.js file that contains an object with designated SQL queries. To modify the query simply edit this file and interchange the object keys
+In the root folder there is a sql.js file that contains an object with designated SQL queries. To modify the query simply edit this file and interchange the object keys
 ```
 module.exports = {
     one: "SELECT DISTINCT domainname FROM customer WHERE  processactive = 1 ",
@@ -52,10 +52,7 @@ function checkPardot(data, site) {
 }
 ```
 
-To change the criteria that is return simply change the text in the indexOf function, the name of the file that is being written to by `fs.appendFile` and the `console.log` text.
-
-
-
+To change the criteria that is returned simply change the text in the `indexOf` function, the name of the file that is being written to by `fs.appendFile` and the `console.log` text.
 
 ## Output
 In the root folder of the application there is a folder titled "sites". Each check will create a corresponding text file in that folder and insert the names of the positive results into the file.

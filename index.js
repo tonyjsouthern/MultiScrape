@@ -1,11 +1,11 @@
 var https = require("https");
 const axios = require("axios");
 var path = require("path");
-const fs = require("fs");
 var ISOLATION_LEVEL = require("tedious").ISOLATION_LEVEL;
 var Connection = require("tedious").Connection;
 var sql = require("sequelize");
 var queries = require("./sql.js");
+var scriptChecks = require("./script-checks.js")
 require("dotenv").config();
 
 // GLOBAL VARIABLES
@@ -17,7 +17,6 @@ var storedHTML;
 var currentSite;
 // counter for recursive function
 var i = 0;
-
 
 // config for database
 var config = {
@@ -82,12 +81,12 @@ function loopSites() {
 }
 
 function runChecks(data, site) {
-  checkSF(data, site);
-  checkHubspot(data, site);
-  checkMarketo(data, site);
-  checkActon(data, site);
-  checkClickDimensions(data, site);
-  checkPardot(data, site);
+  scriptChecks.checkSF(data, site);
+  scriptChecks.checkHubspot(data, site);
+  scriptChecks.checkMarketo(data, site);
+  scriptChecks.checkActon(data, site);
+  scriptChecks.checkClickDimensions(data, site);
+  scriptChecks.checkPardot(data, site);
 }
 
 function loadSite() {
@@ -103,60 +102,4 @@ function loadSite() {
 }
 
 // Intitializes Program
-init()
-
-// Tracking Script Checks
-
-function checkSF(data, site) {
-  if (data.indexOf("sf_config") != -1 || data.indexOf("frt(") != -1) {
-    fs.appendFile("sites/SF.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - SF");
-    });
-  }
-}
-
-function checkHubspot(data, site) {
-  if (data.indexOf("hs-scripts.com") != -1) {
-    fs.appendFile("sites/hubspot.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - Hubspot");
-    });
-  }
-}
-
-function checkMarketo(data, site) {
-  if (data.indexOf("munchkin") != -1) {
-    fs.appendFile("sites/Marketo.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - Marketo");
-    });
-  }
-}
-
-function checkActon(data, site) {
-  if (data.indexOf("acton") != -1) {
-    fs.appendFile("sites/Act-On.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - Act-On");
-    });
-  }
-}
-
-function checkClickDimensions(data, site) {
-  if (data.indexOf("clickdimensions") != -1) {
-    fs.appendFile("sites/Click-Dimensions.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - Click Dimensions");
-    });
-  }
-}
-
-function checkPardot(data, site) {
-  if (data.indexOf("pardot") != -1) {
-    fs.appendFile("sites/Pardot.txt", site + "\n", (err) => {
-      if (err) throw err;
-      console.log("Saved - Pardot");
-    });
-  }
-}
+init();
