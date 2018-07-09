@@ -16,7 +16,9 @@ var storedHTML;
 // varable that stores the current site the iteration is on
 var currentSite;
 // counter for recursive function
-var i = 0;
+var i = 113;
+
+// erros out on 322
 
 // config for database
 var config = {
@@ -103,9 +105,9 @@ function loadSite() {
     })
     .catch(error => {
       // If there is an error message write the website url and error code to logs
-      fs.appendFile("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {
-        console.log("An error has occurred loading " + currentSite + ". Check the error.txt file for more information.");
+      fs.appendFileSync("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {
       });
+      console.log("An error has occurred loading " + currentSite + ". Check the error.txt file for more information.");
     });
 }
 
