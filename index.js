@@ -13,12 +13,14 @@ require("dotenv").config();
 var domains = [];
 // varable used to store the html after axios call
 var storedHTML;
+// variable used to store the load storedStatus
+var storedStatus;
 // varable that stores the current site the iteration is on
 var currentSite;
 // counter for recursive function
-var i = 113;
+var i = 0;
 
-// erros out on 322
+
 
 // config for database
 var config = {
@@ -104,9 +106,10 @@ function loadSite() {
       storedHTML = response.data;
     })
     .catch(error => {
+      // if error set HTML to blank so that it does not scan the previous site
+      storedHTML = "";
       // If there is an error message write the website url and error code to logs
-      fs.appendFileSync("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {
-      });
+      fs.appendFileSync("sites/Error-Log.txt", currentSite + " : Error Code - " + error.code + "\n", (err) => {});
       console.log("An error has occurred loading " + currentSite + ". Check the error.txt file for more information.");
     });
 }
