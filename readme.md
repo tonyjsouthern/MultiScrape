@@ -1,6 +1,6 @@
 # MultiScrape
 
-This application runs a query against a database and grabs URL's. It then loads the URL's and checks for tracking marketing automation tracking scripts present on the website.
+This application runs a query against a database and grabs URL's. It then loads the URL's and checks for marketing automation tracking scripts present on the website.
 
 ## Installation:
 
