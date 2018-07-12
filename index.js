@@ -4,8 +4,8 @@ const axios = require("axios");
 var path = require("path");
 var sql = require("sequelize");
 var Connection = require("tedious").Connection;
-var queries = require("./sql.js");
-var scriptChecks = require("./script-checks.js")
+var queries = require("./lib/sql.js");
+var scriptChecks = require("./lib/script-checks.js")
 require("dotenv").config();
 
 // GLOBAL VARIABLES
