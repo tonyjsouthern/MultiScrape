@@ -8,9 +8,25 @@ var queries = require("./lib/sql.js");
 var scriptChecks = require("./lib/script-checks.js")
 require("dotenv").config();
 
+// import for manual domain siteList
+var siteList = require("./manualsites.js")
+
 // GLOBAL VARIABLES
+
+// ----------- Uncomment this section to pull from db -----------
 // variable to store customer domains
-var domains = [];
+//var domains = [];
+// --------------------------------------------------------------
+
+// ----------- comment out this section to enable DB ------------
+// variable to store a manual list of records
+var domains = siteList;
+console.log(siteList)
+// test to see if sitelist is the correct length
+console.log("The length of the manual list is: " + domains.length)
+// ---------------------------------------------------------------
+
+
 // varable used to store the html after axios call
 var storedHTML;
 // variable used to store the load storedStatus
@@ -20,7 +36,8 @@ var currentSite;
 // counter for recursive function
 var i = 0;
 
-
+/*
+// ----------- Uncomment this section to pull from db -----------
 
 // config for database
 var config = {
@@ -45,7 +62,8 @@ function queryDbs(query) {
   })
 }
 
-// intitialization function
+
+// intitialization function for DB pull
 function init() {
   new Promise(function(resolve, reject) {
     // Runs the first SQL query to gather domains
@@ -58,6 +76,15 @@ function init() {
     // intitializes the recursive loop function
     loopSites()
   })
+}
+*/
+// --------------------------------------------------------------
+
+
+// init function for manual list
+function init () {
+  console.log("\n" + "Number of domains to scan: " + domains.length + "\n")
+  loopSites()
 }
 
 function loopSites() {
